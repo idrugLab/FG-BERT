@@ -9,40 +9,8 @@ def gelu(x):
     return 0.5 * x * (1.0 + tf.math.erf(x / tf.sqrt(2.)))
 
 
-# def get_angles(pos, i, d_model):
-#   angle_rates = 1 / np.power(10000, (2 * (i//2)) / np.float32(d_model))
-#   return pos * angle_rates
-#
-#
-# def positional_encoding(position, d_model):
-#     angle_rads = get_angles(np.arange(position)[:, np.newaxis],
-#                             np.arange(d_model)[np.newaxis, :],
-#                             d_model)
-#
-#     # apply sin to even indices in the array; 2i
-#     angle_rads[:, 0::2] = np.sin(angle_rads[:, 0::2])
-#
-#     # apply cos to odd indices in the array; 2i+1
-#     angle_rads[:, 1::2] = np.cos(angle_rads[:, 1::2])
-#
-#     pos_encoding = angle_rads[np.newaxis, ...]
-#
-#     return tf.cast(pos_encoding, dtype=tf.float32)
 
-
-# def create_padding_mask(seq):
-#     seq = tf.cast(tf.math.equal(seq, 0), tf.float32)
-#
-#     # add extra dimensions to add the padding
-#     # to the attention logits.
-#     return seq[:, tf.newaxis, tf.newaxis, :]  # (batch_size, 1, 1, seq_len)
-#
-# def create_look_ahead_mask(size):
-#   mask = 1 - tf.linalg.band_part(tf.ones((size, size)), -1, 0)
-#   return mask  # (seq_len, seq_len)
-
-
-def scaled_dot_product_attention(q, k, v, mask,adjoin_matrix):  #  自注意力机制
+def scaled_dot_product_attention(q, k, v, mask,adjoin_matrix):
     """Calculate the attention weights.
     q, k, v must have matching leading dimensions.
     k, v must have matching penultimate dimension, i.e.: seq_len_k = seq_len_v.
@@ -60,10 +28,10 @@ def scaled_dot_product_attention(q, k, v, mask,adjoin_matrix):  #  自注意力�
       output, attention_weights
     """
 
-    matmul_qk = tf.matmul(q, k, transpose_b=True)  # (..., seq_len_q, seq_len_k)
+    matmul_qk = tf.matmul(q, k, transpose_b=True)
 
     # scale matmul_qk
-    dk = tf.cast(tf.shape(k)[-1], tf.float32)  #  tf.shape(k)[-1]   k的-1维度的大小，cast()是类型转换
+    dk = tf.cast(tf.shape(k)[-1], tf.float32)
     scaled_attention_logits = matmul_qk / tf.math.sqrt(dk)
 
     # add the mask to the scaled tensor.
@@ -81,7 +49,7 @@ def scaled_dot_product_attention(q, k, v, mask,adjoin_matrix):  #  自注意力�
     return output, attention_weights
 
 
-class MultiHeadAttention(tf.keras.layers.Layer):  #  多头注意力  返回输出和注意力权重
+class MultiHeadAttention(tf.keras.layers.Layer):
     def __init__(self, d_model, num_heads):
         super(MultiHeadAttention, self).__init__()
         self.num_heads = num_heads
@@ -97,7 +65,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):  #  多头注意力  返回输�
 
         self.dense = tf.keras.layers.Dense(d_model)
 
-    def split_heads(self, x, batch_size):  #  切割头数量
+    def split_heads(self, x, batch_size):
         """Split the last dimension into (num_heads, depth).
         Transpose the result such that the shape is (batch_size, num_heads, seq_len, depth)
         """
@@ -130,14 +98,14 @@ class MultiHeadAttention(tf.keras.layers.Layer):  #  多头注意力  返回输�
 
         return output, attention_weights
 
-def point_wise_feed_forward_network(d_model, dff):  #  前馈神经网络
+def point_wise_feed_forward_network(d_model, dff):
     return tf.keras.Sequential([
         tf.keras.layers.Dense(dff, activation=gelu),  # (batch_size, seq_len, dff)tf.keras.layers.LeakyReLU(0.01)
         tf.keras.layers.Dense(d_model)  # (batch_size, seq_len, d_model)
         ])
 
 
-class EncoderLayer(tf.keras.layers.Layer):  #  编码器层 返回output和注意力权重
+class EncoderLayer(tf.keras.layers.Layer):
     def __init__(self, d_model, num_heads, dff, rate=0.1):
         super(EncoderLayer, self).__init__()
 
@@ -151,7 +119,7 @@ class EncoderLayer(tf.keras.layers.Layer):  #  编码器层 返回output和注�
         self.dropout2 = tf.keras.layers.Dropout(rate)
 
     def call(self, x, training, mask,adjoin_matrix):
-        attn_output, attention_weights = self.mha(x, x, x, mask,adjoin_matrix)  # (batch_size, input_seq_len, d_model) 调用MultiHeadAttention中的call方法 
+        attn_output, attention_weights = self.mha(x, x, x, mask,adjoin_matrix)  # (batch_size, input_seq_len, d_model)
         attn_output = self.dropout1(attn_output, training=training)
         out1 = self.layernorm1(x + attn_output)  # (batch_size, input_seq_len, d_model)
 
@@ -161,37 +129,7 @@ class EncoderLayer(tf.keras.layers.Layer):  #  编码器层 返回output和注�
 
         return out2,attention_weights
 
-
-# class EmbeddingDense(tf.keras.layers.Layer):
-#     """运算跟Dense一致，只不过kernel用Embedding层的embedding矩阵
-#     """
-#
-#     def __init__(self,embedding_layer, activation=None, **kwargs):
-#         super(EmbeddingDense, self).__init__(**kwargs)
-#         self.activation = activation
-#         self.units = embedding_layer.input_dim
-#         self.embedding_layer = embedding_layer
-#         self.activation = tf.keras.layers.Activation(self.activation)
-#
-#
-#     def build(self, input_shape):
-#         super(EmbeddingDense, self).build(input_shape)
-#         self.kernel = tf.transpose(self.embedding_layer.embeddings)
-#         self.bias = self.add_weight(name='bias',
-#                                     shape=(self.units,),
-#                                     initializer='zeros')
-#
-#     def call(self, inputs):
-#         outputs = tf.matmul(inputs, self.kernel)
-#         outputs = outputs+self.bias
-#         outputs = self.activation(outputs)
-#         return outputs
-#
-#     def compute_output_shape(self, input_shape):
-#         return input_shape[:-1] + (self.units,)
-
-
-class Encoder(tf.keras.Model):  #  编码器  返回x   维度(batch_size, input_seq_len, d_model)
+class Encoder(tf.keras.Model): 
     def __init__(self, num_layers, d_model, num_heads, dff, input_vocab_size,
                     maximum_position_encoding, rate=0.1):
         super(Encoder, self).__init__()
@@ -209,8 +147,8 @@ class Encoder(tf.keras.Model):  #  编码器  返回x   维度(batch_size, input
         self.dropout = tf.keras.layers.Dropout(rate)
 
     def call(self, x, training, mask,adjoin_matrix):
-        seq_len = tf.shape(x)[1]   #  x中第1维的值
-        adjoin_matrix = adjoin_matrix[:,tf.newaxis,:,:]  # 增加维度
+        seq_len = tf.shape(x)[1]
+        adjoin_matrix = adjoin_matrix[:,tf.newaxis,:,:]
         # adding embedding and position encoding.
         x = self.embedding(x)  # (batch_size, input_seq_len, d_model)
         x *= tf.math.sqrt(tf.cast(self.d_model, tf.float32))
@@ -221,7 +159,7 @@ class Encoder(tf.keras.Model):  #  编码器  返回x   维度(batch_size, input
             x,attention_weights = self.enc_layers[i](x, training, mask,adjoin_matrix)
         return x  # (batch_size, input_seq_len, d_model)
 
-class Encoder_test(tf.keras.Model):  #  编码器测试
+class Encoder_test(tf.keras.Model):
     def __init__(self, num_layers, d_model, num_heads, dff, input_vocab_size,
                  maximum_position_encoding, rate=0.1):
         super(Encoder_test, self).__init__()
@@ -234,13 +172,13 @@ class Encoder_test(tf.keras.Model):  #  编码器测试
         #                                         self.d_model)
 
         self.enc_layers = [EncoderLayer(d_model, num_heads, dff, rate)
-                           for _ in range(num_layers)]  # _ 记数，生成多少个EncoderLayer
+                           for _ in range(num_layers)]
 
         self.dropout = tf.keras.layers.Dropout(rate)
 
     def call(self, x, training, mask,adjoin_matrix):
         seq_len = tf.shape(x)[1]
-        adjoin_matrix = adjoin_matrix[:,tf.newaxis,:,:]  # 增加维度
+        adjoin_matrix = adjoin_matrix[:,tf.newaxis,:,:]
         # adding embedding and position encoding.
         x = self.embedding(x)  # (batch_size, input_seq_len, d_model)
         x *= tf.math.sqrt(tf.cast(self.d_model, tf.float32))
@@ -257,7 +195,7 @@ class Encoder_test(tf.keras.Model):  #  编码器测试
 
         return x,attention_weights_list,xs
 
-class BertModel_test(tf.keras.Model):  #  BERT测试模型
+class BertModel_test(tf.keras.Model):
     def __init__(self,num_layers = 6,d_model = 256,dff = 512,num_heads = 8,vocab_size = 18,dropout_rate = 0.1):
         super(BertModel_test, self).__init__()
         self.encoder = Encoder_test(num_layers=num_layers,d_model=d_model,
@@ -279,8 +217,8 @@ class BertModel(tf.keras.Model):
         self.encoder = Encoder(num_layers=num_layers,d_model=d_model,
                         num_heads=num_heads,dff=dff,input_vocab_size=vocab_size,maximum_position_encoding=200,rate=dropout_rate)
         self.fc1 = tf.keras.layers.Dense(d_model, activation=gelu)
-        self.layernorm = tf.keras.layers.LayerNormalization(-1)  #  在（）维度上进行层归一化
-        self.fc2 = tf.keras.layers.Dense(vocab_size)  #  vocab_size是输出的维度（）
+        self.layernorm = tf.keras.layers.LayerNormalization(-1)
+        self.fc2 = tf.keras.layers.Dense(vocab_size)
 
     def call(self,x,adjoin_matrix,mask,training=False):
         x = self.encoder(x,training=training,mask=mask,adjoin_matrix=adjoin_matrix)
