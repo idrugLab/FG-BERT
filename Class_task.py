@@ -241,7 +241,7 @@ def main(seed, args):
 
 if __name__ == '__main__':
 
-    args = {"dense_dropout":0, "learning_rate":0 , "batch_size":0, "num_heads":0}
+    args = {"dense_dropout":0.1, "learning_rate":1e-4 , "batch_size":16, "num_heads":4}
     auc_list = []
     test_auc_list = []
     test_all_auc_list = []
