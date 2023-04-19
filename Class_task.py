@@ -4,7 +4,7 @@ import tensorflow.keras as keras
 import numpy as np
 from dataset_scoffold_random import Graph_Classification_Dataset
 import os
-from muti_model import PredictModel, BertModel
+from model import PredictModel, BertModel
 from sklearn.metrics import r2_score, roc_auc_score
 from hyperopt import fmin, tpe, hp
 from utils import get_task_names
