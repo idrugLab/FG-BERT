@@ -7,7 +7,7 @@ import numpy as np
 from tensorflow.keras.constraints import max_norm
 from dataset_scoffold_random import Graph_Regression_Dataset
 from sklearn.metrics import roc_auc_score
-from muti_model import  PredictModel,BertModel
+from model import  PredictModel,BertModel
 from hyperopt import fmin, tpe, hp
 
 os.environ["TF_FORCE_GPU_ALLOW_GROWTH"] = "true"
