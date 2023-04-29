@@ -215,6 +215,84 @@ def scaffold_split(dataset, smiles_list, task_idx=None, null_value=0,
                                                             test_smiles)
 
 
+class Functional_Graph_Bert_Dataset(object): 
+    def __init__(self,path,smiles_field='Smiles',addH=True):
+        if path.endswith('.txt') or path.endswith('.tsv'):
+            self.df = pd.read_csv(path,sep='\t')
+        else:
+            self.df = pd.read_csv(path)
+        self.smiles_field = smiles_field
+        self.vocab = str2num
+        self.devocab = num2str
+        self.addH = addH
+
+    def get_data(self):
+
+        data = self.df
+        train_idx = []
+        idx = data.sample(frac=0.9).index
+        train_idx.extend(idx)
+
+        data1 = data[data.index.isin(train_idx)]
+        data2 = data[~data.index.isin(train_idx)]
+        
+        self.dataset1 = tf.data.Dataset.from_tensor_slices(data1[self.smiles_field].tolist())
+        self.dataset1 = self.dataset1.map(self.tf_numerical_smiles, num_parallel_calls=tf.data.experimental.AUTOTUNE).cache().padded_batch(16, padded_shapes=(
+            tf.TensorShape([None]),tf.TensorShape([None,None]), tf.TensorShape([None]), tf.TensorShape([None]))).prefetch(16)
+        print(tf.data.experimental.AUTOTUNE)
+        self.dataset2 = tf.data.Dataset.from_tensor_slices(data2[self.smiles_field].tolist())
+        self.dataset2 = self.dataset2.map(self.tf_numerical_smiles, num_parallel_calls=tf.data.experimental.AUTOTUNE).cache().padded_batch(128, padded_shapes=(
+            tf.TensorShape([None]), tf.TensorShape([None, None]), tf.TensorShape([None]), tf.TensorShape([None]))).prefetch(128)
+            
+        return self.dataset1, self.dataset2
+
+    def numerical_smiles(self, smiles):
+        smiles = smiles.numpy().decode()
+        f_g_list = molecular_fg(smiles)
+        
+        atoms_list, adjoin_matrix = smiles2adjoin(smiles,explicit_hydrogens=self.addH)
+        atoms_list = ['<global>'] + atoms_list
+        nums_list =  [str2num.get(i,str2num['<unk>']) for i in atoms_list]
+
+        temp = np.ones((len(nums_list),len(nums_list)))
+        temp[1:,1:] = adjoin_matrix
+        adjoin_matrix = (1 - temp) * (-1e9)
+
+        temp_fg = np.ones((len(nums_list)+1,len(nums_list)+1))
+        temp_fg[1:,1:] = adjoin_matrix
+        adjoin_matrix = (1 - temp) * (-1e9)
+
+        choices = np.random.permutation(len(f_g_list)-1)[:max(int(len(f_g_list)*0.15),1)] + 1
+
+        y = np.array(nums_list).astype('int64')
+        weight = np.zeros(len(nums_list))
+        for i in choices:
+            rand = np.random.rand()
+            if rand < 0.9:
+                for j in f_g_list[i]:
+                    weight[j] = 1
+                    nums_list[j] = str2num['<mask>']
+
+            else:
+                for j in f_g_list[i]:
+                    weight[j] = 1
+        x = np.array(nums_list).astype('int64')
+        weight = weight.astype('float32')
+        return x, adjoin_matrix, y, weight
+
+    def tf_numerical_smiles(self, data):
+        # x,adjoin_matrix,y,weight = tf.py_function(self.balanced_numerical_smiles,
+        #                                           [data], [tf.int64, tf.float32 ,tf.int64,tf.float32])
+        x, adjoin_matrix, y, weight = tf.py_function(self.numerical_smiles, [data],
+                                                     [tf.int64, tf.float32, tf.int64, tf.float32])
+
+        x.set_shape([None])
+        adjoin_matrix.set_shape([None,None])
+        y.set_shape([None])
+        weight.set_shape([None])
+        return x, adjoin_matrix, y, weight
+
+
 class Graph_Classification_Dataset(object):  # 图分类任务数据集处理
     def __init__(self,path,smiles_field='Smiles',label_field=label,max_len=500,seed=1,batch_size=16,a=2,addH=True):
         if path.endswith('.txt') or path.endswith('.tsv'):
