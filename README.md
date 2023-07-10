@@ -4,7 +4,7 @@ Functional-Graph-BERT
 
 semi-supervised learning for molecular property prediction
 
-requried package: tensorflow==2.3.0,rdkit==2020.03.2,numpy==1.18.5,pandas==1.1.0, openbabel==2.3.1,Other packages can be installed with the latest version
+requried package: tensorflow==2.3.0,rdkit,numpy,pandas, openbabel, Other packages can be installed with the latest version
 
 -- pretrain: contains the codes for masked FG prediction pre-training task.
 
