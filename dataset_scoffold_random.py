@@ -258,10 +258,6 @@ class Functional_Graph_Bert_Dataset(object):
         temp[1:,1:] = adjoin_matrix
         adjoin_matrix = (1 - temp) * (-1e9)
 
-        temp_fg = np.ones((len(nums_list)+1,len(nums_list)+1))
-        temp_fg[1:,1:] = adjoin_matrix
-        adjoin_matrix = (1 - temp) * (-1e9)
-
         choices = np.random.permutation(len(f_g_list)-1)[:max(int(len(f_g_list)*0.15),1)] + 1
 
         y = np.array(nums_list).astype('int64')
