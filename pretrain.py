@@ -71,12 +71,6 @@ for epoch in range(20):
             print('Epoch {} Batch {} Loss {:.4f}'.format(
                 epoch + 1, batch, train_loss.result()))
             print('Accuracy: {:.4f}'.format(train_accuracy.result()))
-            
-            #for x, adjoin_matrix ,y , char_weight in test_dataset:
-            #    test_step(x, adjoin_matrix, y , char_weight)
-            #print('Test Accuracy: {:.4f}'.format(test_accuracy.result()))
-            #test_accuracy.reset_states()
-            #train_accuracy.reset_states()
 
     print(arch['path'] + '/bert_weights{}_{}.h5'.format(arch['name'], epoch+1))
     print('Epoch {} Loss {:.4f}'.format(epoch + 1, train_loss.result()))
