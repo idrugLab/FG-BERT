@@ -51,8 +51,6 @@ def main(seed, args):
     elif task == 'toxcast_data':
         label = get_task_names('toxcast_data.csv')
     
-    elif task == 'estrogen':
-        label = ['alpha','beta']
 
     arch = {'name': 'Medium', 'path': 'medium3_weights_BBBP'}
     pretraining = True
