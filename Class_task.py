@@ -8,7 +8,7 @@ from model import PredictModel, BertModel
 from sklearn.metrics import r2_score, roc_auc_score
 from hyperopt import fmin, tpe, hp
 from utils import get_task_names
-import os
+
 
 os.environ["TF_FORCE_GPU_ALLOW_GROWTH"] = "true"
 keras.backend.clear_session()
