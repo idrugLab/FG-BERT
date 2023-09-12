@@ -15,9 +15,9 @@ os.environ['TF_DETERMINISTIC_OPS'] = '1'
 keras.backend.clear_session()
 
 def main(seed,args):
-    # tasks = ['ESOL', 'FreeSolv', 'Lipo']
+    # tasks = ['ESOL', 'FreeSolv', 'Lipo', 'Malaria', 'cep']
     
-    task = 'FreeSolv'
+    task = 'ESOL'
     print(task)
 
     if task == 'ESOL':
@@ -29,6 +29,12 @@ def main(seed,args):
     elif task == 'Lipo':
         label = ['exp']
 
+    elif task == 'Malaria':
+        label = ['PCE']
+
+    elif task == 'cep':
+        label = ['activity']
+
 
     vocab_size = 18
     trained_epoch = 10
@@ -37,7 +43,7 @@ def main(seed,args):
     addH = True
     dff = d_model * 2
     seed = seed
-    arch  = {'name': 'Medium', 'path': 'medium3_weights_20_notihuan_FreeSolv'}
+    arch  = {'name': 'Medium', 'path': 'medium3_weights_ESOL'}
 
     dense_dropout = args['dense_dropout']
     learning_rate = args['learning_rate']
@@ -49,7 +55,7 @@ def main(seed,args):
 
     np.random.seed(seed=seed)
     tf.random.set_seed(seed=seed)
-    graph_dataset = Graph_Regression_Dataset('FreeSolv.csv', smiles_field='smiles',
+    graph_dataset = Graph_Regression_Dataset('ESOL.csv', smiles_field='smiles',
                                                            label_field=label,normalize=True,seed=seed,batch_size=batch_size,a=len(label),max_len=500,addH=True)
         
     train_dataset, test_dataset,val_dataset = graph_dataset.get_data()
@@ -160,7 +166,7 @@ if __name__ == "__main__":
     RMSE_list = []
     for seed in [1,2,3]:
         print(seed)
-        args = {"dense_dropout":0, "learning_rate":0, "batch_size":0, "num_heads":0}
+        args = {"dense_dropout":0.05, "learning_rate":0.0000636859, "batch_size":16, "num_heads":8}
         MSE, test_RMSE= main(seed, args)
         mse_list.append(MSE)
         RMSE_list.append(test_RMSE)
