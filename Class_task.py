@@ -54,7 +54,7 @@ def main(seed, args):
     elif task == 'estrogen':
         label = ['alpha','beta']
 
-    arch = {'name': 'Medium', 'path': 'medium3_weights_20_notihuan_BBBP'}
+    arch = {'name': 'Medium', 'path': 'medium3_weights_BBBP'}
     pretraining = True
     pretraining_str = 'pretraining' if pretraining else ''
     trained_epoch = 20
@@ -241,11 +241,11 @@ def main(seed, args):
 
 if __name__ == '__main__':
 
-    args = {"dense_dropout":0.2, "learning_rate":3.65e-5 , "batch_size":32, "num_heads":4}
+    args = {"dense_dropout":0, "learning_rate":0.0000826682 , "batch_size":32, "num_heads":8}
     auc_list = []
     test_auc_list = []
     test_all_auc_list = []
-    for seed in [1,2,3]:
+    for seed in [0,1,2,3,4,5,6,7,8,9]:
         print(seed)
         auc, test_auc, a_list= main(seed, args)
         auc_list.append(auc)
