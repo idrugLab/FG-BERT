@@ -7,7 +7,7 @@ import csv
 from rdkit import RDConfig
 from rdkit.Chem import FragmentCatalog
 
-def fg_list():
+def fg_list(): # 47 FGs list
     fName=os.path.join(RDConfig.RDDataDir,'FunctionalGroups.txt')
     fparams = FragmentCatalog.FragCatParams(1,6,fName)
     fg_list = []
@@ -29,7 +29,7 @@ def obsmitosmile(smi):
     smile = smile.replace('\t\n', '')
     return smile
 
-def molecular_fg(smiles):
+def molecular_fg(smiles): # Getting functional groups (including rings) in molecules
 
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
@@ -58,7 +58,7 @@ def molecular_fg(smiles):
                 f_g_list.append(list(atomid))
     return f_g_list
 
-def smiles2adjoin(smiles,explicit_hydrogens=True,canonical_atom_order=False):
+def smiles2adjoin(smiles,explicit_hydrogens=True,canonical_atom_order=False): # Converting molecules in SMILES format to atom lists and adjacency matrices
 
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
