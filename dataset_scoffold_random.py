@@ -215,7 +215,7 @@ def scaffold_split(dataset, smiles_list, task_idx=None, null_value=0,
                                                             test_smiles)
 
 
-class Functional_Graph_Bert_Dataset(object): 
+class Functional_Graph_Bert_Dataset(object): # Pre-training task dataset processing
     def __init__(self,path,smiles_field='Smiles',addH=True):
         if path.endswith('.txt') or path.endswith('.tsv'):
             self.df = pd.read_csv(path,sep='\t')
@@ -289,7 +289,7 @@ class Functional_Graph_Bert_Dataset(object):
         return x, adjoin_matrix, y, weight
 
 
-class Graph_Classification_Dataset(object):  # 图分类任务数据集处理
+class Graph_Classification_Dataset(object):  # Graph classification task data set processing
     def __init__(self,path,smiles_field='Smiles',label_field=label,max_len=500,seed=1,batch_size=16,a=2,addH=True):
         if path.endswith('.txt') or path.endswith('.tsv'):
             self.df = pd.read_csv(path,sep='\t')
@@ -308,7 +308,7 @@ class Graph_Classification_Dataset(object):  # 图分类任务数据集处理
 
     def get_data(self):
 
-        '''随机拆分数据集 random'''
+        '''Randomized Split Dataset'''
         # data = self.df
         # data = data.fillna(666)
         # train_idx = []
@@ -322,10 +322,10 @@ class Graph_Classification_Dataset(object):  # 图分类任务数据集处理
         # test_data = data[data.index.isin(test_idx)]
         # val_data = data[~data.index.isin(train_idx+test_idx)]
 
-        '''按随机分子骨架拆分数据集,random scaffold_split'''
+        '''Splitting the dataset by random molecular scaffold, random_scaffold_split'''
         # data = self.df
         # data = data.fillna(666)
-        # train_ids, val_ids, test_ids = scaffold_split(data, sizes=(0.8, 0.1, 0.1), balanced=True,seed=self.seed)
+        # train_ids, val_ids, test_ids = random_scaffold_split(data, sizes=(0.8, 0.1, 0.1), balanced=True,seed=self.seed)
         # train_data = data.iloc[train_ids]
         # val_data = data.iloc[val_ids]
         # test_data = data.iloc[test_ids]
@@ -333,7 +333,7 @@ class Graph_Classification_Dataset(object):  # 图分类任务数据集处理
         # df_test_data = pd.DataFrame(test_data)
         # df_val_data = pd.DataFrame(val_data)
 
-        '''骨架拆分数据集, scaffold_split'''
+        '''Scaffold Split Dataset, scaffold_split'''
         data = self.df
         smiles_list= data[self.smiles_field]    
         df_train_data,df_val_data,df_test_data = scaffold_split(data, smiles_list, task_idx=None, null_value=0,
@@ -381,7 +381,7 @@ class Graph_Classification_Dataset(object):  # 图分类任务数据集处理
         return x, adjoin_matrix , y
 
 
-class Graph_Regression_Dataset(object):  #  图回归任务数据集处理
+class Graph_Regression_Dataset(object):  #  Graph regression task dataset processing
     def __init__(self,path,smiles_field='Smiles',label_field=label,seed=1,batch_size=32,a=1,max_len=500,normalize=True,addH=True):
         if path.endswith('.txt') or path.endswith('.tsv'):
             self.df = pd.read_csv(path,sep='\t')
@@ -405,7 +405,7 @@ class Graph_Regression_Dataset(object):  #  图回归任务数据集处理
 
     def get_data(self):
 
-        '''随机拆分数据集 random'''
+        ''' random split'''
         # data = self.df        
         # train_idx = []
         # idx = data.sample(frac=0.8).index
@@ -420,7 +420,7 @@ class Graph_Regression_Dataset(object):  #  图回归任务数据集处理
 
         # val_data = data[~data.index.isin(train_idx+test_idx)]
 
-        '''按随机分子骨架拆分数据集,random_scaffold_split'''
+        '''random_scaffold_split'''
         # data = self.df
         # train_ids, val_ids, test_ids = random_scaffold_split(self.df, sizes=(0.8, 0.1, 0.1), balanced= False,seed=self.seed)
         # train_data = self.df.iloc[train_ids]
@@ -431,7 +431,7 @@ class Graph_Regression_Dataset(object):  #  图回归任务数据集处理
         # df_test_data = pd.DataFrame(test_data)
         # df_val_data = pd.DataFrame(val_data)
 
-        '''骨架拆分数据集, scaffold_split'''
+        '''scaffold_split'''
         data = self.df
         smiles_list= data[self.smiles_field]    
         df_train_data,df_val_data,df_test_data = scaffold_split(data, smiles_list, task_idx=None, null_value=0,
