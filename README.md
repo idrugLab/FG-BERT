@@ -1,6 +1,6 @@
 # FG-BERT
 
-Functional-Graph-BERT
+Functional-Group-BERT
 
 semi-supervised learning for molecular property prediction.
 
