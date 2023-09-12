@@ -5,18 +5,19 @@ Functional-Graph-BERT
 semi-supervised learning for molecular property prediction.
 
 requried package: 
-Example of FG-BERT environment installation：
---conda create -n FG-BERT python==3.7.0
---pip install tensorflow==2.3.0
---pip install rdkit
---pip install numpy
---pip install pandas
---conda install -c openbabel openbabel
---pip install matplotlib
---pip install hyperopt
---pip install scikit-learn
 
-Other packages can be installed with the latest version
+Example of FG-BERT environment installation：
+--conda create -n FG-BERT python==3.7.0.
+--pip install tensorflow==2.3.0.
+--pip install rdkit.
+--pip install numpy.
+--pip install pandas.
+--conda install -c openbabel openbabel.
+--pip install matplotlib.
+--pip install hyperopt.
+--pip install scikit-learn.
+
+Other packages can be installed with the latest version.
 
 -- pretrain: contains the codes for masked FG prediction pre-training task.
 
