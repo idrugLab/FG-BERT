@@ -15,7 +15,7 @@ os.environ['TF_DETERMINISTIC_OPS'] = '1'
 keras.backend.clear_session()
 
 def main(seed,args):
-    # tasks = ['ESOL', 'FreeSolv', 'Lipo', 'Malaria', 'cep']
+    # tasks = ['ESOL', 'FreeSolv', 'Lipophilicity', 'Malaria', 'cep']
     
     task = 'ESOL'
     print(task)
@@ -26,7 +26,7 @@ def main(seed,args):
     elif task == 'FreeSolv':
         label = ['expt']
     
-    elif task == 'Lipo':
+    elif task == 'Lipophilicity':
         label = ['exp']
 
     elif task == 'Malaria':
