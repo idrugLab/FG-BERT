@@ -11,7 +11,7 @@ keras.backend.clear_session()
 optimizer = tf.keras.optimizers.Adam(1e-4)
 
 
-medium3 = {'name': 'Medium', 'num_layers': 6, 'num_heads': 4, 'd_model': 256, 'path': 'medium3_weights_notihuan_pubchem_20','addH':True}
+medium3 = {'name': 'Medium', 'num_layers': 6, 'num_heads': 4, 'd_model': 256, 'path': 'medium3_weights','addH':True}
 
 arch = medium3
 num_layers = arch['num_layers']
