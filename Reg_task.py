@@ -5,7 +5,7 @@ import os
 import pandas as pd
 import numpy as np
 from tensorflow.keras.constraints import max_norm
-from dataset_scoffold_random import Graph_Regression_Dataset
+from dataset_scaffold_random import Graph_Regression_Dataset
 from sklearn.metrics import roc_auc_score
 from model import  PredictModel,BertModel
 from hyperopt import fmin, tpe, hp
