@@ -1,6 +1,6 @@
 import tensorflow as tf
 from model import  BertModel
-from dataset_scoffold_random import Functional_Graph_Bert_Dataset
+from dataset_scaffold_random import Functional_Graph_Bert_Dataset
 import time
 import os
 import tensorflow.keras as keras
