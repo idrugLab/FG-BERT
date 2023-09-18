@@ -2,7 +2,7 @@ import sklearn
 import tensorflow as tf
 import tensorflow.keras as keras
 import numpy as np
-from dataset_scoffold_random import Graph_Classification_Dataset
+from dataset_scaffold_random import Graph_Classification_Dataset
 import os
 from model import PredictModel, BertModel
 from sklearn.metrics import r2_score, roc_auc_score
