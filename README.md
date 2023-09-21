@@ -44,7 +44,13 @@ List of functional groups used for pre-training of the FG-BERT model.
 
 # Example of use FG-BERT
 ## Pre-training example：
-Create a folder named: ‘medium3_weights’ in the current folder of the code to hold the pre-trained weights for each epoch.
+### utils.py
+### model.py
+### dataset_scaffold_random.py
+### pretrain.py
+### data.txt
+### Create a folder named: ‘medium3_weights’ in the current folder of the code to hold the pre-trained weights for each epoch.
+### python pretrain.py
 
 
 ## Fine-tuning example：
