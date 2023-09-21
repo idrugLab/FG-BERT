@@ -1,7 +1,7 @@
 # FG-BERT
 Functional-Group-BERT
 semi-supervised learning for molecular property prediction.
-
+![image](https://github.com/idrugLab/FG-BERT/blob/main/FG-BERT.png)
 requried package: 
 
 Example of FG-BERT environment installation：
