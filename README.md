@@ -49,14 +49,18 @@ List of functional groups used for pre-training of the FG-BERT model.
 * dataset_scaffold_random.py
 * pretrain.py
 * data.txt
-Create a folder named: ‘medium3_weights’ in the current folder of the code to hold the pre-trained weights for each epoch.
+* Create a folder named: ‘medium3_weights’ in the current folder of the code to hold the pre-trained weights for each epoch.
 * python pretrain.py
 
 
 ## Fine-tuning example：
 
 ### BBBP dataset:
-
+* utils.py
+* model.py
+* dataset_scaffold_random.py
+* Class_hyperopt.py
+* BBBP.csv
 A folder named "medium3_weights _BBBP" is created in the current code folder, the name of this folder should correspond to the name of the path in the arch dictionary, and is used to store the pre-training weights, which can be downloaded directly from this repository "bert_weightsMedium_20.h5". Another new folder called "classification_weights" is used to hold the optimal weights from the fine-tuning process.
 After the model is run, you will have the weights for the 10 seeds in this folder. args = {"dense_dropout":0, "learning_rate":0.0000826682 , "batch_size":32, "num_heads":8}，This dictionary parameter needs to be modified for each classification task, and the parameters can be obtained from the FG_BERT_Hyperparameters.xlsx file.
 
