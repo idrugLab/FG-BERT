@@ -1,7 +1,9 @@
 # FG-BERT
 Functional-Group-BERT
 semi-supervised learning for molecular property prediction.
+
 ![image](https://github.com/idrugLab/FG-BERT/blob/main/FG-BERT.png)
+
 requried package: 
 
 Example of FG-BERT environment installation：
@@ -36,6 +38,9 @@ Other packages can be installed with the latest version
 -- bert_weightsMedium_20 ：The weights obtained after 20 epochs of model pre-training can be directly passed into the BERT model for downstream tasks, or the user can retrain the model to obtain the weights.
 Users should first unzip the data file and place it in the right place. Then pre-training the FG-BERT for 20 epoch. After that, the classification or the regression file is used to predict specific molecular property.
 
+# FG_list
+List of functional groups used for pre-training of the FG-BERT model.
+![image](https://github.com/idrugLab/FG-BERT/blob/main/fg_list.png)
 
 # example of use FG-BERT
 --Pre-training example：Create a folder named: ‘medium3_weights’ in the current folder of the code to hold the pre-trained weights for each epoch.
