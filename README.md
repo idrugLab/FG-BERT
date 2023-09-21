@@ -1,7 +1,5 @@
 # FG-BERT
-Introduction
 Functional-Group-BERT
-
 semi-supervised learning for molecular property prediction.
 
 requried package: 
