@@ -6,10 +6,10 @@ semi-supervised learning for molecular property prediction.
 
 # Requried package: 
 
-Example of FG-BERT environment installation：
-## --conda create -n FG-BERT python==3.7.0
+## Example of FG-BERT environment installation：
+--conda create -n FG-BERT python==3.7.0
 
-## --pip install tensorflow==2.3.0
+--pip install tensorflow==2.3.0
 
 --pip install rdkit
 
