@@ -7,9 +7,9 @@ semi-supervised learning for molecular property prediction.
 # Requried package: 
 
 Example of FG-BERT environment installation：
---conda create -n FG-BERT python==3.7.0
+## --conda create -n FG-BERT python==3.7.0
 
---pip install tensorflow==2.3.0
+## --pip install tensorflow==2.3.0
 
 --pip install rdkit
 
@@ -42,7 +42,7 @@ Users should first unzip the data file and place it in the right place. Then pre
 List of functional groups used for pre-training of the FG-BERT model.
 ![image](https://github.com/idrugLab/FG-BERT/blob/main/fg_list.png)
 
-# example of use FG-BERT
+# Example of use FG-BERT
 --Pre-training example：Create a folder named: ‘medium3_weights’ in the current folder of the code to hold the pre-trained weights for each epoch.
 
 
