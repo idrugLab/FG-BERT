@@ -4,7 +4,7 @@ semi-supervised learning for molecular property prediction.
 
 ![image](https://github.com/idrugLab/FG-BERT/blob/main/FG-BERT.png)
 
-# requried package: 
+# Requried package: 
 
 Example of FG-BERT environment installation：
 --conda create -n FG-BERT python==3.7.0
