@@ -7,7 +7,7 @@ from tkinter import Label
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from utils import smiles2adjoin
+from utils import smiles2adjoin, molecular_fg
 from rdkit import Chem
 from random import Random
 from collections import defaultdict
