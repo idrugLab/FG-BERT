@@ -89,7 +89,8 @@ After the model is run, you will have the weights for the 10 seeds in this folde
 * Similar to BBBP, the list of labels should be changed to the corresponding label column names, and the dataset_scoffold_random.py file should be modified and commented, with the Scaffold split commented, and the random split uncommented. seed seeds changed to [1,2,3,4,5,6,7,8,9,10]. The result can be obtained.
 * python Class_hyperopt.py
 
-
+# Acknowledgments
+The code was partly built based on MG-BERT. Thanks a lot for their open source codes!
 
 
 
